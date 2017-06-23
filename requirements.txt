@@ -1,0 +1,7 @@
+numpy
+scipy
+collections
+argparse
+io
+sys
+termcolor
