@@ -20,6 +20,5 @@ snippet of code in your terminal:
 pip install -r requirements.txt
 ```
 
-If you don't have pip installed you can refer to the [pip installation pages]
-(https://pip.pypa.io/en/stable/installing/).
+If you don't have pip installed you can refer to the [pip installation pages](https://pip.pypa.io/en/stable/installing/).
 
