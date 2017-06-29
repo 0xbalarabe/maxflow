@@ -5,3 +5,4 @@ argparse
 io
 sys
 termcolor
+networkx

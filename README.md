@@ -1,4 +1,6 @@
-# max-flow
+# maxflow
+
+A small library for maximum flow algorithms.
 
 Implementing the [maxflow algorithm](https://arxiv.org/abs/1608.06016)
 by Madry.
