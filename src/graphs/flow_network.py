@@ -2,6 +2,7 @@ __author__ = 'balaogbeha'
 
 import networkx as nx
 
+
 class FLowNetwork(object):
 
     def __init__(self):

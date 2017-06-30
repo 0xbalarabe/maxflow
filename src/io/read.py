@@ -2,13 +2,13 @@ __author__ = 'balaogbeha'
 
 from termcolor import colored
 import networkx as nx
+import src.graphs.flow_network as fn
 
 
 def _get_num_vertices(file, line, line_number):
     line = line.split()
 
     try:
-        print(line[1])
         return int(line[1])
     except ValueError:
         print_error('1', line_number, file)
@@ -93,7 +93,20 @@ warning_codes = {
 
 def read_graph(file):
 
+    network = fn.FLowNetwork()
+
     graph = nx.Graph()
+
+    graph2 = nx.MultiDiGraph()
+
+
+
+    # graph.add_edge(1,2)
+    # graph.add_edge(0,2)
+
+    graph.add_edge(0,2, weight=0.5)
+    graph.add_edge(0,1, weight=0.9)
+    print(list(graph.edges()))
 
     flags = {
         'n': False,
@@ -104,12 +117,13 @@ def read_graph(file):
     }
 
     with open(file) as _file:
-        line_number = 0
+        # line_number = 0
 
         for line in _file.readlines():
-            line_number += 1
+            # line_number += 1
 
             print(line[0])
-            options[line[0]](file, line, line_number)
+            # options[line[0]](file, line, line_number)
+            var = lambda: print(list(graph.edges()))
 
 read_graph('test.txt')
