@@ -1,24 +1,30 @@
+import math
 import numpy as np
 import scipy as sp
 import scipy.sparse
-
 from scipy.sparse import csgraph
-
-
 import networkx as nx
 
-G = nx.Graph()
-G.add_edge('a', 'b', weight=(0.6, 0.6))
 
-print(G.edges(data=True))
-
-
-def build_chain(graph, probability):
+def incremental_sparsify():
     pass
 
 
-# This function returns an alpha-approximate solution to the equation
-# matrix . x = rhs_vector
+def greedy_elimination(graph):
+    result = graph
+    pass
+
+
+def build_chain(graph, probability):
+    graph_1 = graph
+    chain = {}
+
+    n = graph.get_number_of_edges
+
+    math.log(2)
+    pass
+
+
 def preconditioned_chebyshev(matrix, rhs_vector, iterations, preconditioner, lambda_min, lambda_max):
 
     x = 0
@@ -59,9 +65,8 @@ def recursive_preconditioned_chebyshev(chain, level, rhs_vector, iterations):
 
 def solve_laplacian(laplacian, rhs_vector, error, probability):
 
+    chain = build_chain(laplacian, probability)
 
-    chain = build_chain(graph, probability)
-
-    x = r_p_chebyshev(chain, )
+    x = recursive_preconditioned_chebyshev(chain, )
 
     return x

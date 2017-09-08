@@ -71,6 +71,7 @@ error_codes = {
     '9': 'Malformed edge.'
 }
 
+
 def print_error(error_code, line_number, file):
     print(colored('ERR:', 'red', attrs=['reverse', 'blink']), error_codes[error_code])
     print(colored('IN:', 'red', attrs=['reverse', 'blink']), file)
