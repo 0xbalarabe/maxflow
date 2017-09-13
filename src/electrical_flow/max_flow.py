@@ -1,3 +1,5 @@
+__author__ = 'balaogbeha'
+
 """
 This algorithm computes a maximum flow given a flow network.
 
@@ -10,11 +12,8 @@ It is based on the algorithm presented in the paper:
 
 """
 
-__author__ = 'balaogbeha'
-
 import numpy as np
 import networkx as nx
-
 import src.util.graph
 import src.util.linalg
 
@@ -32,6 +31,8 @@ def electrical_max_flow(graph, value):
     :return: flow if it exists in graph.
     :rtype numpy.array
     """
+
+    o_value = value
 
     """ Tracks primal progress. If primal = 1, then we have successfully found
         a flow with the given value, i.e. F <= F*.
@@ -51,7 +52,9 @@ def electrical_max_flow(graph, value):
 
     graph.compute_residual_graph(solution['flow'])
 
-    while value > 0:
+    while primal < 1:
+
+        print('alpha = ', primal)
 
         """ ... AUGMENTING STEP ...
             Computes an augmenting electrical flow that routes a fraction of the
@@ -59,8 +62,6 @@ def electrical_max_flow(graph, value):
             This flow is induced by the potentials that are the solution to a
             Laplacian system and in general, may not be well coupled.
         """
-
-        print('... AUGMENTING STEP ...')
 
         graph.compute_edge_conductance()
 
@@ -73,7 +74,7 @@ def electrical_max_flow(graph, value):
         """
         dual = np.inner(demands, solution['embedding'])
 
-        if dual > ((2*graph.num_edges)/1-primal):
+        if dual > ((2*graph.num_edges)/(1-primal)):
             print('FAIL')
             return 'FAIL'
 
@@ -94,6 +95,7 @@ def electrical_max_flow(graph, value):
         graph.compute_residual_graph(augmenting_flow)
 
         value *= (1 - step_size)
+        primal = (o_value - value)/o_value
 
         """ ... FIXING STEP ...
             Computes a correction flow that fixes the coupling. This correction
@@ -105,8 +107,6 @@ def electrical_max_flow(graph, value):
             circulation flow and adding it to the augmenting electrical flow we
             have already computed to reinstate our required coupling.
         """
-
-        print('... FIXING STEP ...')
 
         flow_correction = graph.compute_correction(solution['flow'], solution['embedding'])
 
@@ -130,34 +130,4 @@ def electrical_max_flow(graph, value):
 
         graph.compute_residual_graph(fixing_flow)
 
-        print('- - - - - - - - - - - - - - - - - - - - ')
-        print()
-
-    print(solution['flow'])
-    return solution['flow']
-
-
-g = nx.Graph()
-
-g.add_node('s')
-g.add_node(1)
-g.add_node(2)
-g.add_node(3)
-g.add_node(4)
-g.add_node(5)
-g.add_node('t')
-
-g.add_edge('s', 1, weight=0, capacity=[5, 4])
-g.add_edge('s', 2, weight=0, capacity=[1, 1])
-g.add_edge('s', 3, weight=0, capacity=[3, 2])
-g.add_edge(1, 2, weight=0, capacity=[1, 1])
-g.add_edge(1, 5, weight=0, capacity=[2, 2])
-g.add_edge(1, 't', weight=0, capacity=[2, 1])
-g.add_edge(2, 4, weight=0, capacity=[2, 1])
-g.add_edge(3, 4, weight=0, capacity=[2, 2])
-g.add_edge(4, 't', weight=0, capacity=[2, 2])
-g.add_edge(5, 't', weight=0, capacity=[2, 2])
-
-_graph = src.util.graph.Graph(g)
-
-electrical_max_flow(_graph, 6)
+    return graph.get_flow_mapping(solution['flow'])

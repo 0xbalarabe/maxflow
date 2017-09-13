@@ -2,7 +2,6 @@ __author__ = 'balaogbeha'
 
 import scipy as sp
 
-
 def laplacian_solver(laplacian, demand):
     """
     Solves a Laplacian system of equations.

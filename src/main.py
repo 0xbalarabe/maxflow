@@ -1,19 +1,20 @@
-import src.electrical_flow.max_flow as max_flow
-import src.
+import sys
+import src.util.read as RD
+import src.util.graph as GP
+import src.electrical_flow.max_flow as MF
 
 __author__ = 'balaogbeha'
 
+filename = sys.argv[1]
 
-# graph = read_graph()
 
-# laplacian = convert_laplacian(graph)
+def run(filename):
+    (graph, value) = RD.read_graph(filename)
 
-# electrical_max_flow = compute_max_flow(laplacian)
+    graph = GP.Graph(graph)
 
-# combinatorial_max_flow = edmonds_karp(graph)
+    flow = MF.electrical_max_flow(graph, value)
 
-# approx = electrical_max_flow/combinatorial_max_flow
+    print(flow)
 
-# time_ratio = electrical/combinatorial
-
-# print statistics to stdout
+run(filename)

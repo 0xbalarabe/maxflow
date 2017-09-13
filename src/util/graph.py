@@ -1,5 +1,6 @@
 __author__ = 'balaogbeha'
 
+import math
 import networkx as nx
 import numpy as np
 
@@ -27,6 +28,15 @@ class Graph(object):
         self.num_nodes = len(self.graph.nodes())
 
         self.num_edges = len(self.graph.edges())
+
+        self.max_capacity = 0
+
+        for (u, v, attr) in self.graph.edges(data=True):
+
+            capacity = max(attr['capacity'])
+
+            if capacity > self.max_capacity:
+                self.max_capacity = capacity
 
     def compute_residual_graph(self, flow):
         """
@@ -188,6 +198,15 @@ class Graph(object):
         return correction
 
     def delta(self, embedding):
+        """
+        Computes the 'stretch' of an embedding.
+
+        :param embedding: An embedding
+        :type embedding: numpy.array
+
+        :return: delta: The stretch of the embedding
+        :rtype numpy.array
+        """
 
         delta = np.zeros(self.num_edges)
 
@@ -204,6 +223,15 @@ class Graph(object):
         return delta
 
     def phi(self, flow):
+        """
+        Computes the 'potential' function of a flow.
+
+        :param flow: A flow
+        :type flow: numpy.array
+
+        :return: phi: The potential function of the flow
+        :rtype numpy.array
+        """
 
         phi = np.zeros(self.num_edges)
 
@@ -215,9 +243,9 @@ class Graph(object):
 
         return phi
 
-    def arc_boosting(self):
+    def arc_boosting(self, eta, primal, congestion):
         """
-        Performs the arc boosting opeation on our graph.
+        Performs the arc boosting operation on our graph.
 
         :param flow: A flow
         :type flow: numpy.array
@@ -226,4 +254,63 @@ class Graph(object):
         :rtype numpy.array
         """
 
+        k = self.num_edges ** (4 * eta)
+
+        print('eta =', eta)
+
+        print('k = ', k)
+
+        high_energy_edges = []
+
+        s = []
+
+        for (u, v, attr) in self.residual_graph.edges(data=True):
+
+            edge_index = self.edge_order.index((u, v))
+
+            high_energy = abs(congestion[edge_index]) >= (self.num_edges ** (0.5 - (3 * eta)))/(13200 * (1 - primal))
+
+
+
+            print('HIGH ENERGY ')
+            print(congestion[edge_index])
+
+
+
+            attr['congestion'] = congestion[edge_index]
+
+        for (u, v, attr) in sorted(self.residual_graph.edges(data=True), key=lambda x: x[2]['congestion'], reverse=True):
+
+            if k == 0:
+                break
+            else:
+                s.append((u, v))
+                k -= 1
+
+        for e in s:
+
+            beta = 2 + math.ceil((2 * self.max_capacity)/1 )
+
+        print(s)
+
         return None
+
+    def get_flow_mapping(self, flow):
+        """
+        Maps a flow from a vector to dictionary that maps an edge to the flow
+        across the edge.
+
+        :param flow: A flow
+        :type flow: numpy.array
+
+        :return: flow_dict: A dictionary representing the flow
+        :rtype dictionary
+        """
+
+        flow_dict = {}
+
+        for index in range(self.num_edges):
+            flow_dict[self.edge_order[index]] = flow[index]
+
+        return flow_dict
+
